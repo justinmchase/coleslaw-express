@@ -15,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/justinmchase/coleslaw-express/issues"
   },
-  "homepage": "https://github.com/justinmchase/coleslaw-express#readme"
+  "homepage": "https://github.com/justinmchase/coleslaw-express#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.4",
+    "supertest": "^1.2.0"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.4"
+  }
 }
