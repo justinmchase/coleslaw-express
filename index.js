@@ -10,7 +10,10 @@ function generateCreateRoute(options, model) {
     var router = options.express.Router()
     router.post('/', (req, res, next) => {
         var data = req.body
-        options.dataAccess[model.name].create(data, (err, result) => {
+        var T = options.models[model.name];
+        var instance = new T()
+        instance.set(data)
+        instance.save((err, result) => {
             if (err) return next(err)
             res.status(200).send(result)
         })
@@ -67,26 +70,24 @@ function generateCrudRoutes(options, model) {
     return router
 }
 
-function generate(options, model) {
+function build(options, callback) {
     assert(options)
-    assert(model)
+    assert(callback)
 
     if (!options.express) options.express = require('express')
-    if (typeof model === 'object' && model.length) {
-        return model
-            .map(m => generate(express, m))
-            .filter(m => m != null)
-    }
-
-    if (typeof model === 'object' && model.type === 'model') {
+    
+    var router = options.express.Router()
+    var definitions = options.definitions
+    
+    definitions.forEach(model => {
         var name = model.name
-        var router = options.express.Router()
+        var type = options.models[name]
         router.use(`/${name}`, generateCrudRoutes(options, model))
-        return router
-    }
-
+    })
+    
+    options.routes = router
+    
+    callback(null)
 }
 
-module.exports = {
-    generate: generate
-}
+module.exports = build
